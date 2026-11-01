@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA EMS — Enterprise Employee Management & DSA Visualizer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- ==========================================================================
+         SIDEBAR NAVIGATION
+         ========================================================================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect width="18" height="18" x="3" y="3" rx="3"/>
+            <path d="M7 7h3v10H7z"/>
+            <path d="M14 7h3v6h-3z"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h2>NOVA EMS</h2>
+          <span class="brand-badge">DSA v2.4</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">CORE PLATFORM</div>
+        <button class="nav-item active" data-tab="dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="directory">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Employee Directory</span>
+          <span class="nav-count" id="sidebar-count">0</span>
+        </button>
+        <button class="nav-item" data-tab="add-employee">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          <span>Add Employee</span>
+        </button>
+
+        <div class="nav-section-title">ALGORITHMS & DSA</div>
+        <button class="nav-item" data-tab="visualizer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M9 9l6 6"></path></svg>
+          <span>DSA Visualizer Studio</span>
+          <span class="nav-pill">Interactive</span>
+        </button>
+        <button class="nav-item" data-tab="analytics">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics & Reports</span>
+        </button>
+        <button class="nav-item" data-tab="code-hub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          <span>C++ Code & Viva Prep</span>
+        </button>
+
+        <div class="nav-section-title">SYSTEM & TOOLS</div>
+        <button class="nav-item" data-tab="data-tools">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Data Tools & Backup</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="theme-switch-container">
+          <span class="theme-label">Theme Mode</span>
+          <button class="btn-theme-toggle" id="btn-theme-toggle" title="Toggle Light/Dark Theme">
+            <span class="theme-icon" id="theme-icon">🌙</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==========================================================================
+         MAIN CONTENT AREA
+         ========================================================================== -->
+    <main class="main-content">
+      <!-- Top App Bar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" title="Toggle Menu">☰</button>
+          <div class="breadcrumbs">
+            <span class="breadcrumb-root">Portal</span>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-active" id="current-page-title">Dashboard</span>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <div class="dsa-indicator">
+            <span class="status-pulse"></span>
+            <span>Linked List Memory: Active</span>
+          </div>
+          <button class="btn btn-sm btn-primary" id="topbar-btn-add">
+            + New Record
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Tab Container -->
+      <div class="tab-content-area">
+
+        <!-- ======================================================================
+             TAB 1: EXECUTIVE DASHBOARD
+             ====================================================================== -->
+        <section class="tab-pane active" id="pane-dashboard">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Executive Dashboard</h1>
+              <p class="page-subtitle">Real-time organizational telemetry and linked list heap memory state.</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-secondary btn-sm" id="btn-quick-sort-id">Sort by ID</button>
+              <button class="btn btn-secondary btn-sm" id="btn-quick-sort-sal">Sort by Salary</button>
+            </div>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap bg-blue-glow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              </div>
+              <div>
+                <div class="kpi-label">Active Headcount</div>
+                <div class="kpi-val" id="dash-count">0</div>
+                <div class="kpi-note">Linked Nodes (N)</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap bg-green-glow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+              <div>
+                <div class="kpi-label">Total Annual Payroll</div>
+                <div class="kpi-val" id="dash-payroll">$0</div>
+                <div class="kpi-note">Sum of Node Salaries</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap bg-purple-glow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M16 8l-8 8"></path></svg>
+              </div>
+              <div>
+                <div class="kpi-label">Average Compensation</div>
+                <div class="kpi-val" id="dash-avg">$0</div>
+                <div class="kpi-note">Payroll ÷ N</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap bg-amber-glow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </div>
+              <div>
+                <div class="kpi-label">Top Compensation</div>
+                <div class="kpi-val" id="dash-max-sal">$0</div>
+                <div class="kpi-note text-truncate" id="dash-max-emp">None</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick DSA Preview Banner -->
+          <div class="card dsa-banner-card">
+            <div class="banner-content">
+              <div class="badge-tag">DSA Live Pointer Stream</div>
+              <h3>Memory Node Chain Preview</h3>
+              <p>Visualizing dynamic link addresses and heap pointers connecting organizational roster nodes.</p>
+              <div class="dash-mini-chain" id="dash-mini-chain">
+                <!-- Mini visual chain -->
+              </div>
+            </div>
+            <button class="btn btn-primary" id="btn-jump-visualizer">
+              Open Visualizer Studio ➔
+            </button>
+          </div>
+
+          <!-- Dashboard Two Column Grid -->
+          <div class="grid-2col">
+            <!-- Recent Additions Table -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Latest Employee Nodes</h3>
+                <button class="btn btn-sm btn-ghost" id="dash-btn-view-all">View All ➔</button>
+              </div>
+              <div class="table-responsive">
+                <table class="compact-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Role</th>
+                      <th style="text-align: right;">Salary</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dash-recent-table">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Operations Audit Log -->
+            <div class="card">
+              <div class="card-header">
+                <h3>DSA Operations Log</h3>
+                <span class="badge" id="audit-log-count">0 Events</span>
+              </div>
+              <div class="audit-timeline" id="dash-audit-log">
+                <!-- Log entries -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 2: EMPLOYEE DIRECTORY
+             ====================================================================== -->
+        <section class="tab-pane" id="pane-directory">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Employee Directory</h1>
+              <p class="page-subtitle">Search, filter, inspect, and manage organizational records stored in the linked list.</p>
+            </div>
+            <div class="view-switch-group">
+              <button class="btn-icon-switch active" id="btn-view-table" title="Table View">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              </button>
+              <button class="btn-icon-switch" id="btn-view-grid" title="Cards / Grid View">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter & Control Bar -->
+          <div class="filter-bar">
+            <div class="search-input-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="dir-search-input" placeholder="Search by name, ID, designation, department..." />
+              <button id="dir-clear-search" class="clear-search" style="display:none;">&times;</button>
+            </div>
+
+            <div class="filter-dropdown-wrap">
+              <select id="dir-dept-filter" class="custom-select">
+                <option value="ALL">All Departments</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Data & AI">Data & AI</option>
+                <option value="Product & Design">Product & Design</option>
+                <option value="Operations & HR">Operations & HR</option>
+              </select>
+
+              <select id="dir-sort-filter" class="custom-select">
+                <option value="id-asc">Sort: ID (Ascending)</option>
+                <option value="id-desc">Sort: ID (Descending)</option>
+                <option value="sal-desc">Sort: Salary (High to Low)</option>
+                <option value="sal-asc">Sort: Salary (Low to High)</option>
+                <option value="name-asc">Sort: Name (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Table View Container -->
+          <div class="card table-view-container" id="dir-table-container">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>ID</th>
+                    <th>Employee Name</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th style="text-align: right;">Salary</th>
+                    <th style="text-align: center; width: 140px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dir-table-body">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Grid View Container -->
+          <div class="cards-grid-container" id="dir-grid-container" style="display: none;">
+            <!-- Populated with Employee Cards -->
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 3: DSA VISUALIZER STUDIO
+             ====================================================================== -->
+        <section class="tab-pane" id="pane-visualizer">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Linked List Visualizer Studio</h1>
+              <p class="page-subtitle">Interactive algorithmic playground: inspect node allocations, pointer traversals, and bubble sort steps.</p>
+            </div>
+            <div class="visualizer-speed-ctrl">
+              <span class="speed-label">Anim Speed:</span>
+              <button class="speed-btn active" data-speed="600">1x</button>
+              <button class="speed-btn" data-speed="350">2x</button>
+              <button class="speed-btn" data-speed="150">Fast</button>
+            </div>
+          </div>
+
+          <!-- Visualizer Toolbar -->
+          <div class="vis-toolbar card">
+            <div class="vis-toolbar-group">
+              <span class="toolbar-label">Pointer Operations:</span>
+              <button class="btn btn-sm btn-secondary" id="vis-btn-traverse">
+                ▶ Traverse Chain
+              </button>
+              <button class="btn btn-sm btn-secondary" id="vis-btn-animated-sort">
+                ⚡ Animated Bubble Sort (ID)
+              </button>
+              <button class="btn btn-sm btn-secondary" id="vis-btn-sort-sal">
+                ⚡ Animated Sort (Salary)
+              </button>
+            </div>
+
+            <div class="vis-toolbar-group">
+              <span class="toolbar-label">Quick Actions:</span>
+              <button class="btn btn-sm btn-ghost" id="vis-btn-insert-head">
+                + Insert Head
+              </button>
+              <button class="btn btn-sm btn-ghost" id="vis-btn-del-head">
+                - Delete Head
+              </button>
+              <button class="btn btn-sm btn-ghost" id="vis-btn-reset">
+                ↺ Restore Default
+              </button>
+            </div>
+          </div>
+
+          <!-- Step Stats Banner (For Sorting & Traversal) -->
+          <div class="vis-step-banner card" id="vis-step-banner" style="display: none;">
+            <div class="step-info">
+              <span class="step-badge" id="step-badge">Step 1</span>
+              <span class="step-desc" id="step-desc">Comparing Node A and Node B...</span>
+            </div>
+            <div class="step-stats">
+              <span>Comparisons: <strong id="step-cmp-count">0</strong></span>
+              <span>Swaps: <strong id="step-swap-count">0</strong></span>
+            </div>
+          </div>
+
+          <!-- Main Visual Canvas -->
+          <div class="canvas-wrapper card">
+            <div class="canvas-outer-scroll">
+              <div class="canvas-track" id="visualizer-canvas-track">
+                <!-- Dynamically populated with Head, Nodes, Arrows, and NULL -->
+              </div>
+            </div>
+
+            <div class="canvas-legend">
+              <div class="legend-item"><span class="legend-chip chip-head"></span> <strong>HEAD Pointer</strong> (Entry Address)</div>
+              <div class="legend-item"><span class="legend-chip chip-node"></span> <strong>Heap Node</strong> (Payload: ID, Name, Des, Sal)</div>
+              <div class="legend-item"><span class="legend-chip chip-arrow"></span> <strong>Next Pointer</strong> (Memory Reference)</div>
+              <div class="legend-item"><span class="legend-chip chip-null"></span> <strong>NULL Terminator</strong> (End of List)</div>
+            </div>
+          </div>
+
+          <!-- Complexity Breakdown -->
+          <div class="grid-3col">
+            <div class="card info-box">
+              <h4>Insertion at Head</h4>
+              <div class="comp-badge tag-const">O(1) Constant Time</div>
+              <p>Creates node, sets <code>new_node-&gt;next = head</code>, then updates <code>head = new_node</code> without traversal.</p>
+            </div>
+            <div class="card info-box">
+              <h4>Linear Traversal & Search</h4>
+              <div class="comp-badge tag-linear">O(N) Linear Time</div>
+              <p>Walks pointer from <code>head</code> to <code>curr-&gt;next</code> until target key is found or reaches <code>nullptr</code>.</p>
+            </div>
+            <div class="card info-box">
+              <h4>Linked List Bubble Sort</h4>
+              <div class="comp-badge tag-quad">O(N²) Quadratic Time</div>
+              <p>Double pointer scan (<code>p</code> & <code>q = p-&gt;next</code>) safely swapping node data payloads in place.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 4: ADD EMPLOYEE PORTAL
+             ====================================================================== -->
+        <section class="tab-pane" id="pane-add-employee">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Add New Employee Node</h1>
+              <p class="page-subtitle">Allocate a new dynamic heap memory block and link it to the roster structure.</p>
+            </div>
+          </div>
+
+          <div class="form-layout-grid">
+            <div class="card form-card">
+              <form id="full-add-form">
+                <div class="form-row-2">
+                  <div class="form-field">
+                    <label for="f-id">Employee ID <span class="req">*</span></label>
+                    <input type="number" id="f-id" required min="1" placeholder="e.g. 106" />
+                    <span class="field-hint">Must be a unique positive integer.</span>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="f-name">Full Name <span class="req">*</span></label>
+                    <input type="text" id="f-name" required placeholder="e.g. Aditi Kulkarni" />
+                  </div>
+                </div>
+
+                <div class="form-row-2">
+                  <div class="form-field">
+                    <label for="f-dept">Department <span class="req">*</span></label>
+                    <select id="f-dept" required class="custom-select">
+                      <option value="Engineering">Engineering</option>
+                      <option value="Data & AI">Data & AI</option>
+                      <option value="Product & Design">Product & Design</option>
+                      <option value="Operations & HR">Operations & HR</option>
+                    </select>
+                  </div>
+
+                  <div class="form-field">
+                    <label for="f-des">Designation / Job Title <span class="req">*</span></label>
+                    <input type="text" id="f-des" required placeholder="e.g. Senior Machine Learning Engineer" />
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <div class="slider-label-row">
+                    <label for="f-sal-range">Annual Compensation ($)</label>
+                    <span class="slider-val-preview" id="f-sal-preview">$120,000</span>
+                  </div>
+                  <input type="range" id="f-sal-range" min="30000" max="250000" step="2500" value="120000" />
+                  <input type="number" id="f-sal-num" min="10000" max="1000000" step="1000" value="120000" class="mt-2" />
+                </div>
+
+                <div class="form-field">
+                  <label>Node Link Strategy</label>
+                  <div class="radio-pill-group">
+                    <label class="radio-pill">
+                      <input type="radio" name="link-strategy" value="tail" checked />
+                      <span>Append at Tail (Default - O(N))</span>
+                    </label>
+                    <label class="radio-pill">
+                      <input type="radio" name="link-strategy" value="head" />
+                      <span>Insert at Head (Fast - O(1))</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="reset" class="btn btn-secondary">Clear Form</button>
+                  <button type="submit" class="btn btn-primary">
+                    ⚡ Allocate & Link Node
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Preview Card -->
+            <div class="card preview-card">
+              <h3>Live Node Preview</h3>
+              <p class="text-muted">Simulated memory representation of the node being constructed:</p>
+
+              <div class="simulated-node-box mt-4">
+                <div class="node-box-header">
+                  <span>Heap Block</span>
+                  <span class="font-mono text-cyan" id="prev-addr">0x7FFE...</span>
+                </div>
+                <div class="node-box-body">
+                  <div class="prev-name" id="prev-name">Aditi Kulkarni</div>
+                  <div class="prev-des" id="prev-des">Senior ML Engineer</div>
+                  <div class="prev-dept" id="prev-dept">Engineering</div>
+                  <div class="prev-sal" id="prev-sal">$120,000 / year</div>
+                </div>
+                <div class="node-box-footer">
+                  <span>ID: <strong id="prev-id">106</strong></span>
+                  <span>next* ➔ <span class="font-mono text-muted">0x0 (Tail)</span></span>
+                </div>
+              </div>
+
+              <div class="preview-tips mt-4">
+                <div class="tip-item">
+                  <strong>Pointer Safety:</strong> Automatically checks for duplicate IDs before memory allocation.
+                </div>
+                <div class="tip-item">
+                  <strong>Local Persistence:</strong> All records are committed to browser storage immediately.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 5: ANALYTICS & REPORTS
+             ====================================================================== -->
+        <section class="tab-pane" id="pane-analytics">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Analytics & Payroll Telemetry</h1>
+              <p class="page-subtitle">Roster metrics, compensation distribution, and department breakdown charts.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-print-report" onclick="window.print()">
+              🖨️ Print Report
+            </button>
+          </div>
+
+          <div class="grid-2col">
+            <!-- Department Distribution -->
+            <div class="card">
+              <h3>Headcount by Department</h3>
+              <p class="text-muted text-sm mb-4">Distribution of active nodes across business units.</p>
+              <div class="chart-bars-list" id="analytics-dept-bars">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Salary Tier Breakdown -->
+            <div class="card">
+              <h3>Salary Tier Distribution</h3>
+              <p class="text-muted text-sm mb-4">Breakdown by compensation brackets.</p>
+              <div class="chart-bars-list" id="analytics-salary-bars">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Earners Leaderboard -->
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3>Compensation Leaderboard</h3>
+              <span class="badge">Top Compensated Nodes</span>
+            </div>
+            <div class="table-responsive">
+              <table class="compact-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>ID</th>
+                    <th>Employee Name</th>
+                    <th>Department</th>
+                    <th>Role</th>
+                    <th style="text-align: right;">Annual Compensation</th>
+                  </tr>
+                </thead>
+                <tbody id="analytics-top-earners">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 6: C++ CODE & VIVA PREP
+             ====================================================================== -->
+        <section class="tab-pane" id="pane-code-hub">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">C++ Source Code & Viva Preparation</h1>
+              <p class="page-subtitle">Production C++ linked list implementation, bug fix analysis, and technical interview questions.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btn-copy-cpp">
+              Copy C++ Code
+            </button>
+          </div>
+
+          <!-- Bug Fix Analysis Grid -->
+          <div class="card mb-4">
+            <h3>Original C++ Bugs vs Fixed Architecture</h3>
+            <div class="bug-table-wrap mt-3">
+              <table class="bug-table">
+                <thead>
+                  <tr>
+                    <th>Defect in Original Code</th>
+                    <th>Root Cause</th>
+                    <th>Resolution Implemented</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="text-red font-mono font-bold">sorting() Crash</span></td>
+                    <td><code>Emp *temp = NULL; temp-&gt;id = p-&gt;id;</code> writes to address 0 (Null Pointer Dereference). Only <code>id</code> was swapped.</td>
+                    <td>Added <code>swapPayload(p, q)</code> swapping all fields safely without touching pointers.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-red font-mono font-bold">deletee() Head Crash</span></td>
+                    <td><code>p-&gt;next-&gt;id != x</code> checked starting at the second node, skipping head node and crashing when list had 1 node.</td>
+                    <td>Explicitly handled head deletion <code>head = head-&gt;next; delete temp;</code> and checked <code>curr != nullptr</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-red font-mono font-bold">cin &gt;&gt; nm Truncation</span></td>
+                    <td><code>cin &gt;&gt;</code> breaks on spaces (e.g. "John Doe"), creating infinite loops in the menu.</td>
+                    <td>Switched to <code>std::string</code> and <code>getline(cin, val)</code> with <code>stringstream</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="text-red font-mono font-bold">Heap Memory Leaks</span></td>
+                    <td>No destructor existed; all allocated nodes stayed in heap memory when exiting.</td>
+                    <td>Implemented <code>~Organization()</code> destructor deallocating each node in $O(N)$ time.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Code Viewer -->
+          <div class="card code-viewer-card mb-4">
+            <div class="code-viewer-header">
+              <span>main.cpp (Optimized Object-Oriented C++)</span>
+              <span class="badge">C++11 / C++14 / C++17 Compatible</span>
+            </div>
+            <pre class="code-block"><code id="cpp-code-display">
+// Production-grade Singly Linked List Implementation
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;iomanip&gt;
+
+class Employee {
+public:
+    int id;
+    std::string name;
+    std::string designation;
+    double salary;
+    Employee* next;
+
+    Employee(int id, const std::string&amp; name, const std::string&amp; des, double sal)
+        : id(id), name(name), designation(des), salary(sal), next(nullptr) {}
+};
+
+class Organization {
+private:
+    Employee* head;
+    int count;
+
+public:
+    Organization() : head(nullptr), count(0) {}
+
+    ~Organization() {
+        clear();
+    }
+
+    void clear() {
+        Employee* curr = head;
+        while (curr != nullptr) {
+            Employee* temp = curr;
+            curr = curr-&gt;next;
+            delete temp;
+        }
+        head = nullptr;
+        count = 0;
+    }
+
+    bool insert(int id, const std::string&amp; name, const std::string&amp; des, double salary) {
+        if (id &lt;= 0 || exists(id)) return false;
+        Employee* newNode = new Employee(id, name, des, salary);
+        if (!head) {
+            head = newNode;
+        } else {
+            Employee* curr = head;
+            while (curr-&gt;next) curr = curr-&gt;next;
+            curr-&gt;next = newNode;
+        }
+        count++;
+        return true;
+    }
+
+    bool deleteById(int id) {
+        if (!head) return false;
+        if (head-&gt;id == id) {
+            Employee* temp = head;
+            head = head-&gt;next;
+            delete temp;
+            count--;
+            return true;
+        }
+        Employee *curr = head, *prev = nullptr;
+        while (curr &amp;&amp; curr-&gt;id != id) {
+            prev = curr;
+            curr = curr-&gt;next;
+        }
+        if (!curr) return false;
+        prev-&gt;next = curr-&gt;next;
+        delete curr;
+        count--;
+        return true;
+    }
+
+    void sortById(bool asc = true) {
+        if (!head || !head-&gt;next) return;
+        for (Employee* p = head; p != nullptr; p = p-&gt;next) {
+            for (Employee* q = p-&gt;next; q != nullptr; q = q-&gt;next) {
+                if (asc ? (p-&gt;id &gt; q-&gt;id) : (p-&gt;id &lt; q-&gt;id)) {
+                    std::swap(p-&gt;id, q-&gt;id);
+                    std::swap(p-&gt;name, q-&gt;name);
+                    std::swap(p-&gt;designation, q-&gt;designation);
+                    std::swap(p-&gt;salary, q-&gt;salary);
+                }
+            }
+        }
+    }
+};
+            </code></pre>
+          </div>
+
+          <!-- College Viva Q&A Accordion -->
+          <div class="card">
+            <h3>College Viva & Technical Interview Q&A</h3>
+            <div class="faq-list mt-3">
+              <details class="faq-item">
+                <summary>1. Why use a Linked List instead of an Array for Employee Management?</summary>
+                <p>Arrays have fixed sizes (or need expensive $O(N)$ reallocation). Linked Lists allow dynamic memory allocation on demand, meaning employees can be inserted or deleted without shifting memory blocks or pre-allocating large fixed buffers.</p>
+              </details>
+              <details class="faq-item">
+                <summary>2. What is the time complexity of inserting a node at the head vs tail?</summary>
+                <p>Inserting at the <strong>Head</strong> is $O(1)$ constant time (update pointer). Inserting at the <strong>Tail</strong> is $O(N)$ linear time in a Singly Linked List because you must traverse from head to the last node (unless a dedicated <code>tail</code> pointer is maintained, in which case it becomes $O(1)$).</p>
+              </details>
+              <details class="faq-item">
+                <summary>3. Why is deleting the head node a special case?</summary>
+                <p>Because there is no preceding node whose <code>next</code> pointer needs updating. Instead, the entry pointer <code>head</code> itself must be redirected to <code>head-&gt;next</code> before deallocating the original node.</p>
+              </details>
+              <details class="faq-item">
+                <summary>4. How does Bubble Sort operate on a Singly Linked List?</summary>
+                <p>Two pointers <code>p</code> and <code>q = p-&gt;next</code> traverse the list in nested loops ($O(N^2)$). When comparison conditions match, swapping the node payloads (data fields) avoids complex pointer relinking.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======================================================================
+             TAB 7: DATA TOOLS & SETTINGS
+             ====================================================================== -->
+        <section class="tab-pane" id="pane-data-tools">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Data Tools & Backup Hub</h1>
+              <p class="page-subtitle">Export records, load demonstration benchmarks, or manage browser persistence.</p>
+            </div>
+          </div>
+
+          <div class="grid-2col">
+            <!-- Data Export / Import Card -->
+            <div class="card">
+              <h3>Export & Import Roster</h3>
+              <p class="text-muted text-sm mb-4">Export all active nodes to standard file formats.</p>
+              <div class="flex-actions-gap">
+                <button class="btn btn-primary" id="btn-export-csv-full">
+                  📥 Export to CSV (Spreadsheet)
+                </button>
+                <button class="btn btn-secondary" id="btn-export-json">
+                  📥 Export to JSON
+                </button>
+              </div>
+              <div class="data-stats-box mt-4">
+                <span>Storage Status: <strong>LocalStorage Active</strong></span>
+                <span id="storage-record-indicator">4 Records Saved</span>
+              </div>
+            </div>
+
+            <!-- Demo Datasets Card -->
+            <div class="card">
+              <h3>Preset Demonstration Datasets</h3>
+              <p class="text-muted text-sm mb-4">Instantly populate the system for project demonstrations or viva presentations.</p>
+              <div class="preset-buttons-col">
+                <button class="btn btn-secondary" id="btn-load-tech-startup">
+                  🚀 Load "AI Tech Startup" Preset (6 Nodes)
+                </button>
+                <button class="btn btn-secondary" id="btn-load-enterprise">
+                  🏢 Load "Global Enterprise" Preset (10 Nodes)
+                </button>
+                <button class="btn btn-danger" id="btn-factory-reset">
+                  🗑️ Clear All Roster Records
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div> <!-- /tab-content-area -->
+    </main>
+  </div>
+
+  <!-- Employee Detail Inspect Modal -->
+  <div class="modal-backdrop" id="modal-inspect">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="inspect-title">Employee Node Details</h3>
+        <button class="btn-close" id="btn-close-inspect">&times;</button>
+      </div>
+      <div class="modal-body" id="inspect-body">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-close-inspect-foot">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
